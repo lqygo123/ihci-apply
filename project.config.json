@@ -1,0 +1,13 @@
+{
+  "description": "ihci applying wechat app based on wepy ",
+  "setting": {
+    "urlCheck": true,
+    "es6": false,
+    "postcss": false,
+    "minified": false
+  },
+  "compileType": "miniprogram",
+  "appid": "touristappid",
+  "projectname": "ihci-apply",
+  "miniprogramRoot": "./dist"
+}

@@ -1,0 +1,288 @@
+<style lang="less">
+  .main-container {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    padding-bottom: 50px;
+
+    .nav-bar {
+      position: absolute;
+      bottom: 50px;
+      left: 0;
+      right: 0;
+      width: 100%;
+      height: 50px;
+
+      display: flex;
+      justify-content: space-around;
+      .nav-item {
+        height: 50px;
+        line-height: 50px;
+        text-align: center;
+      }
+      .active {
+        color: red;
+        border-top: 1px solid;
+      }
+    }
+  }
+  .course-page {
+    padding-top: 100px;
+    .filter-wrapper {
+      position: absolute;
+      width: 100%;
+      height: 100px;
+      top: 0;
+      left: 0;
+      right: 0;
+      border-bottom: 1px solid;
+      .filter-top {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        height: 50px;
+        border-bottom: 1px solid;
+        text-align: center;
+        .city {
+          flex: 0 0 20%;
+        }
+        .grade {
+          flex: 1 0 60%;
+        }
+      }
+      .filter-second {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+      }
+    }
+  }
+</style>
+<template>
+  <view class="main-container">
+    <!-- <courseList/> -->
+    <view class="course-page">
+      <view class="filter-wrapper">
+        <view class="filter-top">
+          <picker bindchange="handleCityPicker" value="{{cityIdx}}" range="{{cityArray}}">
+            <view class="city">{{cityArray[cityIdx]}}</view>
+          </picker>
+          <picker
+            class="grade"
+            mode="multiSelector"
+            bindchange="handleGradePicker"
+            bindcolumnchange="handleGradeColumnChange"
+            value="{{gradeIdx}}"
+            range="{{gradeMutiArray}}"
+          >
+            <view>{{gradeCurrent}}</view>
+          </picker>
+        </view>
+        <view class="filter-second">
+          <picker
+            class="subject"
+            mode="multiSelector"
+            bindchange="handleSubjectPicker"
+            bindcolumnchange="handleSubjectColumnChange"
+            value="{{subjectIdx}}"
+            range="{{subjectMutiArray}}"
+          >
+            <view>{{subjectCurrent}}</view>
+          </picker>
+          <picker class="term" bindchange="handleTermPicker" value="{{termIdx}}" range="{{termArray}}">
+            <view class="city">{{termArray[termIdx]}}</view>
+          </picker>
+          <picker class="type" bindchange="handleCourseTypePicker" value="{{courseTypeIdx}}" range="{{courseTypeArray}}">
+            <view class="city">{{courseTypeArray[courseTypeIdx]}}</view>
+          </picker>
+        </view>
+      </view>
+    </view>
+    <!-- <courseList/> -->
+
+    <view class="nav-bar">
+      <view
+        class="nav-item"
+        :class="{active: activeTab === 'course-list'}"
+        @tap="handelTabClick('course-list')"
+      >课程列表</view>
+      <view
+        class="nav-item"
+        :class="{active: activeTab === 'user-center'}"
+        @tap="handelTabClick('user-center')"
+      >个人中心</view>
+    </view>
+    <toast/>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import Toast from 'wepy-com-toast'
+  import courseList from './course-list'
+
+  import {
+    CITY_LIST,
+    GRADE_TYPE,
+    GRADE_GROUP_ALL,
+    GRADE_GROUP_ELEMENTRAY,
+    GRADE_GROUP_MIDDLE,
+    GRADE_GROUP_HIGH,
+    SUBJECT_TYPE,
+    SUBJECT_GROUP_ALL,
+    SUBJECT_GROUP_EV3,
+    SUBJECT_GROUP_WEDO,
+    SUBJECT_GROUP_SCRATCH,
+    TERM_TYPE,
+    COURSE_TYPE
+  } from '../config.js'
+
+  export default class Index extends wepy.page {
+    config = {
+      navigationBarTitleText: '艾西报名小程序'
+    }
+    components = {
+      toast: Toast,
+      courseList: courseList
+    }
+
+    data = {
+      // course-list -------------------------------------------------
+      cityIdx: 0,
+      cityArray: CITY_LIST,
+
+      gradeIdx: [0, 0],
+      gradeMutiArray: [GRADE_TYPE, GRADE_GROUP_ALL],
+      gradeCurrent: '全年级',
+
+      subjectIdx: [0, 0],
+      subjectMutiArray: [SUBJECT_TYPE, SUBJECT_GROUP_ALL],
+      subjectCurrent: '选择课程',
+
+      termIdx: 0,
+      termArray: TERM_TYPE,
+
+      courseTypeIdx: 0,
+      courseTypeArray: COURSE_TYPE,
+
+      courseList: [
+        {
+          courseId: 'courseID',
+          courseCode: 100223232323,
+          courseName: '2019秋季课EV3高级班',
+          place: {
+            city: '广州',
+            area: '番禺区',
+            campus: '大学城校区'
+          },
+          recomendGrade: ['E1', 'A1', 'H1'],
+          subject: 'ev3', //  'ev3' 'wedo' 'scrach'
+          level: 'beginner', // 'beginner' 'middle' 'advanced'
+          term: 'spring', // 'spring' 'summer' 'autumn' 'winter'
+          type: 'normal', // 'normal' 'experience'
+          time: {
+            startDate: '2019-2-13',
+            endDate: '2019-2-13',
+            timeFilter: 'mon', // 'mon' 'tue' 'wed' 'thu' 'fri' 'sat' 'sun' 't1' ~ 't6'
+            timeDescribe: ''
+          },
+          capacity: 100,
+          enrolled: 77,
+          teacher: {
+            name: '李云飘',
+            avatar:
+              'https://image.baidu.com/search/detail?ct=503316480&z=&tn=baiduimagedetail&ipn=d&word=%E5%A4%B4%E5%83%8F&step_word=&ie=utf-8&in=&cl=2&lm=-1&st=-1&hd=&latest=&copyright=&cs=1937445174,2133528823&os=1207677010,851488075&simid=4198234072,751767991&pn=0&rn=1&di=121990&ln=2080&fr=&fmq=1559990372006_R&ic=&s=undefined&se=&sme=&tab=0&width=&height=&face=undefined&is=0,0&istype=2&ist=&jit=&bdtype=0&spn=0&pi=0&gsm=0&objurl=http%3A%2F%2Fimg.52z.com%2Fupload%2Fnews%2Fimage%2F20181108%2F20181108204521_83402.jpg&rpstart=0&rpnum=0&adpicid=0&force=undefined'
+          },
+          price: {
+            // 打折逻辑待定
+            type: 'fixed',
+            price: 120
+          },
+          info: {
+            recomendDes: '适合全部小学生',
+            goalDes: '高效学习英语',
+            detailImg:
+              'https://image.baidu.com/search/detail?ct=503316480&z=&tn=baiduimagedetail&ipn=d&word=%E5%A4%B4%E5%83%8F&step_word=&ie=utf-8&in=&cl=2&lm=-1&st=-1&hd=&latest=&copyright=&cs=1937445174,2133528823&os=1207677010,851488075&simid=4198234072,751767991&pn=0&rn=1&di=121990&ln=2080&fr=&fmq=1559990372006_R&ic=&s=undefined&se=&sme=&tab=0&width=&height=&face=undefined&is=0,0&istype=2&ist=&jit=&bdtype=0&spn=0&pi=0&gsm=0&objurl=http%3A%2F%2Fimg.52z.com%2Fupload%2Fnews%2Fimage%2F20181108%2F20181108204521_83402.jpg&rpstart=0&rpnum=0&adpicid=0&force=undefined'
+          }
+        }
+      ],
+      // course-list -------------------------------------------------
+      activeTab: 'course-list'
+    }
+
+    computed = {}
+
+    methods = {
+      handelTabClick: tabTag => {
+        console.log(tabTag)
+        this.activeTab = tabTag
+      },
+      // course-list -------------------------------------------------
+      handleCityPicker: event => {
+        this.cityIdx = event.detail.value
+        this.$apply()
+      },
+      handleGradePicker: event => {
+        this.gradeIdx = event.detail.value
+        this.gradeCurrent = this.gradeMutiArray[1][event.detail.value[1]]
+        this.$apply()
+      },
+      handleGradeColumnChange: event => {
+        const columnList = [
+          GRADE_GROUP_ALL,
+          GRADE_GROUP_ELEMENTRAY,
+          GRADE_GROUP_MIDDLE,
+          GRADE_GROUP_HIGH
+        ]
+        if (event.detail.column == 0) {
+          this.gradeMutiArray[1] = columnList[event.detail.value]
+        }
+        this.$apply()
+      },
+      handleSubjectPicker: event => {
+        this.subjectIdx = event.detail.value
+        this.subjectCurrent = this.subjectMutiArray[0][event.detail.value[0]] + this.subjectMutiArray[1][event.detail.value[1]]
+        this.$apply()
+      },
+      handleSubjectColumnChange: event => {
+        const columnList = [
+          SUBJECT_GROUP_ALL,
+          SUBJECT_GROUP_EV3,
+          SUBJECT_GROUP_WEDO,
+          SUBJECT_GROUP_SCRATCH
+        ]
+        if (event.detail.column == 0) {
+          this.subjectMutiArray[1] = columnList[event.detail.value]
+        }
+        this.$apply()
+      },
+      handleTermPicker: event => {
+        this.termIdx = event.detail.value
+        this.$apply()
+      },
+      handleCourseTypePicker: event => {
+        this.courseTypeIdx = event.detail.value
+        this.$apply()
+      },
+      // course-list -------------------------------------------------
+    }
+
+    events = {}
+
+    onLoad() {
+      let self = this
+      this.$parent.getUserInfo(function(userInfo) {
+        if (userInfo) {
+          self.userInfo = userInfo
+        }
+        self.normalTitle = '标题已被修改'
+        self.setTimeoutTitle = '标题三秒后会被修改'
+        setTimeout(() => {
+          self.setTimeoutTitle = '到三秒了'
+          self.$apply()
+        }, 3000)
+        self.$apply()
+      })
+    }
+  }
+</script>

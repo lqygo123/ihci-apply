@@ -1,0 +1,141 @@
+<style lang="less">
+  .course-page {
+    padding-top: 100px;
+    .filter-wrapper {
+      position: absolute;
+      width: 100%;
+      height: 100px;
+      top: 0;
+      left: 0;
+      right: 0;
+      border-bottom: 1px solid;
+      .filter-top {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        height: 50px;
+        border-bottom: 1px solid;
+        text-align: center;
+        .city {
+          flex: 0 0 20%;
+        }
+        .grade {
+          flex: 1 0 60%;
+        }
+      }
+    }
+  }
+</style>
+<template>
+  <view class="course-page">
+    <view class="filter-wrapper">
+      <view class="filter-top">
+        <picker bindchange="handleCityPicker" value="{{cityIdx}}" range="{{cityList}}">
+          <view class="city">{{cityList[cityIdx]}}</view>
+        </picker>
+        <picker
+          mode="multiSelector"
+          bindchange="handleGradePicker"
+          bindcolumnchange="handleGradeColumnChange"
+          value="{{gradeIdx}}"
+          range="{{gradeMutiArray}}"
+        >
+          <view class="grade">{{gradeCurrent}}</view>
+        </picker>
+
+      </view>
+      <view class="filter-second"></view>
+    </view>
+  </view>
+</template>
+<script>
+  import wepy from 'wepy'
+  import {
+    CITY_LIST,
+    GRADE_TYPE,
+    GRADE_GROUP_ALL,
+    GRADE_GROUP_ELEMENTRAY,
+    GRADE_GROUP_MIDDLE,
+    GRADE_GROUP_HIGH
+  } from '../config.js'
+
+  export default class CourseList extends wepy.component {
+    data = {
+      cityIdx: 0,
+      cityList: CITY_LIST.map(item => item.name),
+
+      gradeIdx: [0, 0],
+      gradeMutiArray: [GRADE_TYPE, GRADE_GROUP_ELEMENTRAY],
+      gradeCurrent: '全年级',
+
+      // gradeType: GRADE_TYPE,
+      // gradeGroupCurrent: GRADE_GROUP_ELEMENTRAY,
+
+      courseList: [
+        {
+          courseId: 'courseID',
+          courseCode: 100223232323,
+          courseName: '2019秋季课EV3高级班',
+          place: {
+            city: '广州',
+            area: '番禺区',
+            campus: '大学城校区'
+          },
+          recomendGrade: ['E1', 'A1', 'H1'],
+          subject: 'ev3', //  'ev3' 'wedo' 'scrach'
+          level: 'beginner', // 'beginner' 'middle' 'advanced'
+          term: 'spring', // 'spring' 'summer' 'autumn' 'winter'
+          type: 'normal', // 'normal' 'experience'
+          time: {
+            startDate: '2019-2-13',
+            endDate: '2019-2-13',
+            timeFilter: 'mon', // 'mon' 'tue' 'wed' 'thu' 'fri' 'sat' 'sun' 't1' ~ 't6'
+            timeDescribe: ''
+          },
+          capacity: 100,
+          enrolled: 77,
+          teacher: {
+            name: '李云飘',
+            avatar:
+              'https://image.baidu.com/search/detail?ct=503316480&z=&tn=baiduimagedetail&ipn=d&word=%E5%A4%B4%E5%83%8F&step_word=&ie=utf-8&in=&cl=2&lm=-1&st=-1&hd=&latest=&copyright=&cs=1937445174,2133528823&os=1207677010,851488075&simid=4198234072,751767991&pn=0&rn=1&di=121990&ln=2080&fr=&fmq=1559990372006_R&ic=&s=undefined&se=&sme=&tab=0&width=&height=&face=undefined&is=0,0&istype=2&ist=&jit=&bdtype=0&spn=0&pi=0&gsm=0&objurl=http%3A%2F%2Fimg.52z.com%2Fupload%2Fnews%2Fimage%2F20181108%2F20181108204521_83402.jpg&rpstart=0&rpnum=0&adpicid=0&force=undefined'
+          },
+          price: {
+            type: 'fixed', // 打折逻辑待定
+            price: 120
+          },
+          info: {
+            recomendDes: '适合全部小学生',
+            goalDes: '高效学习英语',
+            detailImg:
+              'https://image.baidu.com/search/detail?ct=503316480&z=&tn=baiduimagedetail&ipn=d&word=%E5%A4%B4%E5%83%8F&step_word=&ie=utf-8&in=&cl=2&lm=-1&st=-1&hd=&latest=&copyright=&cs=1937445174,2133528823&os=1207677010,851488075&simid=4198234072,751767991&pn=0&rn=1&di=121990&ln=2080&fr=&fmq=1559990372006_R&ic=&s=undefined&se=&sme=&tab=0&width=&height=&face=undefined&is=0,0&istype=2&ist=&jit=&bdtype=0&spn=0&pi=0&gsm=0&objurl=http%3A%2F%2Fimg.52z.com%2Fupload%2Fnews%2Fimage%2F20181108%2F20181108204521_83402.jpg&rpstart=0&rpnum=0&adpicid=0&force=undefined'
+          }
+        }
+      ]
+    }
+
+    events = {}
+
+    methods = {
+      handleCityPicker: event => {
+        this.cityIdx = event.detail.value
+        this.$apply()
+      },
+      handleGradePicker: event => {
+        this.gradeIdx = event.detail.value
+        this.$apply()
+      },
+      handleGradeColumnChange: event => {
+        console.log(event.detail)
+        console.log('修改的列为', event.detail.column, '，值1为', event.detail.value)
+      }
+    }
+
+    onLoad() {
+      // this.cityList = cityList
+      // console.log(this.filterConfig)
+      // // this.setData({
+      // //   filterConfig: FILTER_CONFIG
+      // // })
+    }
+  }
+</script>
